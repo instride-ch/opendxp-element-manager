@@ -1,0 +1,4 @@
+services:
+    Instride\Bundle\OpenDxpElementManagerBundle\DuplicateIndex\DataTransformer\SimpleDataTransformer:
+        tags:
+            - { name: opendxp_element_manager.data_transformer, type: simple_text }

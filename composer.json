@@ -1,0 +1,45 @@
+{
+  "name": "instride/opendxp-element-manager",
+  "type": "opendxp-bundle",
+  "license": "GPL-3.0-or-later",
+  "description": "Element Manager",
+  "keywords": [
+    "opendxp",
+    "opendxp-bundle"
+  ],
+  "homepage": "https://github.com/instride-ch/opendxp-element-manager",
+  "authors": [
+    {
+      "name": "instride AG",
+      "email": "connect@instride.ch",
+      "homepage": "https://instride.ch",
+      "role": "Digital Agency"
+    },
+    {
+      "name": "CORS GmbH",
+      "email": "office@cors.gmbh",
+      "homepage": "https://cors.gmbh",
+      "role": "Digital Agency"
+    }
+  ],
+  "require": {
+    "coreshop/resource-bundle": "^4.0",
+    "league/csv": "^9.0",
+    "open-dxp/opendxp": "^1.3"
+  },
+  "suggest": {
+    "opendxp/object-merger": "To directly merge duplicates"
+  },
+  "autoload": {
+    "psr-4": {
+      "Instride\\Bundle\\OpenDxpElementManagerBundle\\": "src/OpenDxpElementManagerBundle/"
+    }
+  },
+  "extra": {
+    "opendxp": {
+      "bundles": [
+        "Instride\\Bundle\\OpenDxpElementManagerBundle\\OpenDxpElementManagerBundle"
+      ]
+    }
+  }
+}

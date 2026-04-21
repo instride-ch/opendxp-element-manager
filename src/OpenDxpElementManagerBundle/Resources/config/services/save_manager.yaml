@@ -1,0 +1,27 @@
+services:
+    Instride\Bundle\OpenDxpElementManagerBundle\SaveManager\NamingScheme\ExpressionNamingScheme:
+        arguments:
+            - '@coreshop.expression_language'
+            - '@Symfony\Component\HttpFoundation\RequestStack'
+            - '@OpenDxp\Http\Request\Resolver\OpenDxpContextResolver'
+
+    Instride\Bundle\OpenDxpElementManagerBundle\SaveManager\ValidationSaveHandler:
+        arguments:
+            - '@Symfony\Component\Validator\Validator\ValidatorInterface'
+
+    Instride\Bundle\OpenDxpElementManagerBundle\SaveManager\DuplicationSaveHandler:
+        arguments:
+            - '@Instride\Bundle\OpenDxpElementManagerBundle\DuplicateChecker\DuplicateServiceInterface'
+
+    Instride\Bundle\OpenDxpElementManagerBundle\EventListener\ObjectEventListener:
+        arguments:
+            - '@Instride\Bundle\OpenDxpElementManagerBundle\SaveManager\ObjectSaveManagers'
+        tags:
+            - { name: kernel.event_listener, event: opendxp.dataobject.preUpdate, method: onPreUpdate }
+            - { name: kernel.event_listener, event: opendxp.dataobject.postUpdate, method: onPostUpdate }
+            - { name: kernel.event_listener, event: opendxp.dataobject.preAdd, method: onPreAdd }
+            - { name: kernel.event_listener, event: opendxp.dataobject.postAdd, method: onPostAdd }
+            - { name: kernel.event_listener, event: opendxp.dataobject.preDelete, method: onPreDelete }
+            - { name: kernel.event_listener, event: opendxp.dataobject.postDelete, method: onPostDelete }
+
+    Instride\Bundle\OpenDxpElementManagerBundle\SaveManager\ObjectSaveManagers: ~

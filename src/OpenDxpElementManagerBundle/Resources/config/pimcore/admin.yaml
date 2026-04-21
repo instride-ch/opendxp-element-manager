@@ -1,0 +1,8 @@
+opendxp_element_manager:
+    opendxp_admin:
+        js:
+            startup: '/bundles/opendxpelementmanager/opendxp/js/startup.js'
+            duplicate_index_item: '/bundles/opendxpelementmanager/opendxp/js/duplication_index/item.js'
+            duplicate_index_panel: '/bundles/opendxpelementmanager/opendxp/js/duplication_index/panel.js'
+        css:
+            index: '/bundles/opendxpelementmanager/opendxp/css/opendxpelementmanager.css'
