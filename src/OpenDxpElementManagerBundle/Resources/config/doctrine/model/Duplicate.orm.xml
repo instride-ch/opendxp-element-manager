@@ -4,7 +4,7 @@
                   xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                                       http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <mapped-superclass name="Instride\Bundle\OpenDxpElementManagerBundle\Model\Duplicate" table="opendxp_element_manager_duplicate">
+    <entity name="Instride\Bundle\OpenDxpElementManagerBundle\Model\Duplicate" repository-class="Instride\Bundle\OpenDxpElementManagerBundle\Repository\DuplicateRepository" table="opendxp_element_manager_duplicate">
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
@@ -14,7 +14,11 @@
         <field name="object" type="opendxpObject" column="object"/>
         <field name="md5" type="string" column="md5"/>
         <field name="fields" type="array" column="fields"/>
-        <field name="fieldsCrc" type="integer" column="fieldsCrc"/>
+        <field name="fieldsCrc" type="integer" column="fieldsCrc">
+            <options>
+                <option name="unsigned">true</option>
+            </options>
+        </field>
         <field name="soundex" type="string" column="soundex" nullable="true"/>
         <field name="metaphone" type="string" column="metaphone" nullable="true"/>
         <field name="creationDate" type="date" column="creationDate">
@@ -23,11 +27,15 @@
         <field name="modificationDate" type="datetime" column="modificationDate" nullable="true">
             <gedmo:timestampable on="update"/>
         </field>
-        <one-to-many field="objects" target-entity="Instride\Bundle\OpenDxpElementManagerBundle\Model\DuplicateObjectInterface" mapped-by="duplicate" fetch="EAGER">
+        <one-to-many field="objects" target-entity="Instride\Bundle\OpenDxpElementManagerBundle\Model\DuplicateObject" mapped-by="duplicate" fetch="EAGER">
             <cascade>
                 <cascade-persist/>
             </cascade>
             <orphan-removal>true</orphan-removal>
         </one-to-many>
-    </mapped-superclass>
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="onPrePersist"/>
+            <lifecycle-callback type="preUpdate" method="onPreUpdate"/>
+        </lifecycle-callbacks>
+    </entity>
 </doctrine-mapping>

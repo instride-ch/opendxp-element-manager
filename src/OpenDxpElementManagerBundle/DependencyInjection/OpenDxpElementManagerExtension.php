@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * OpenDxp Element Manager.
+ * OpenDXP Element Manager.
  *
  * LICENSE
  *
@@ -11,17 +11,18 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE.md and gpl-3.0.txt
  * files that are distributed with this source code.
  *
- * @copyright 2024 instride AG (https://instride.ch)
+ * @copyright 2026 instride AG (https://instride.ch)
  * @license   https://github.com/instride-ch/opendxp-element-manager/blob/main/gpl-3.0.txt GNU General Public License version 3 (GPLv3)
  */
 
 namespace Instride\Bundle\OpenDxpElementManagerBundle\DependencyInjection;
 
-use CoreShop\Bundle\ResourceBundle\DependencyInjection\Extension\AbstractModelExtension;
 use Instride\Bundle\OpenDxpElementManagerBundle\Metadata\DuplicatesIndex\FieldMetadata;
 use Instride\Bundle\OpenDxpElementManagerBundle\Metadata\DuplicatesIndex\GroupMetadata;
 use Instride\Bundle\OpenDxpElementManagerBundle\Metadata\DuplicatesIndex\Metadata;
 use Instride\Bundle\OpenDxpElementManagerBundle\Metadata\DuplicatesIndex\MetadataRegistry;
+use Instride\Bundle\OpenDxpElementManagerBundle\Resource\Doctrine\Type\OpenDxpObjectType;
+use Instride\Bundle\OpenDxpElementManagerBundle\Resource\Factory\Factory as DefaultFactory;
 use Instride\Bundle\OpenDxpElementManagerBundle\SaveManager\DuplicationSaveHandler;
 use Instride\Bundle\OpenDxpElementManagerBundle\SaveManager\NamingSchemeSaveHandler;
 use Instride\Bundle\OpenDxpElementManagerBundle\SaveManager\ObjectSaveManagers;
@@ -31,13 +32,31 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Resource\DirectoryResource;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Extension\Extension;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\File\File;
 
-class OpenDxpElementManagerExtension extends AbstractModelExtension
+class OpenDxpElementManagerExtension extends Extension implements PrependExtensionInterface
 {
+    public function getAlias(): string
+    {
+        return 'opendxp_element_manager';
+    }
+
+    public function prepend(ContainerBuilder $container): void
+    {
+        $container->prependExtensionConfig('doctrine', [
+            'dbal' => [
+                'types' => [
+                    OpenDxpObjectType::NAME => OpenDxpObjectType::class,
+                ],
+            ],
+        ]);
+    }
+
     /**
      * @inheritDoc
      *
@@ -54,10 +73,10 @@ class OpenDxpElementManagerExtension extends AbstractModelExtension
         $loader->load('services/duplication.yaml');
         $loader->load('services/similarity_checker.yaml');
         $loader->load('services/commands.yaml');
+        $loader->load('services/save_manager.yaml');
 
         $this->registerResources(
             'opendxp_element_manager',
-            $config['driver'],
             $config['resources'],
             $container
         );
@@ -282,6 +301,8 @@ class OpenDxpElementManagerExtension extends AbstractModelExtension
                 ]);
                 $fieldMetaData->setPublic(false);
 
+
+
                 $fieldId = \sprintf(
                     'opendxp_element_manager.metadata.%s.%s.%s',
                     \strtolower($className),
@@ -323,5 +344,74 @@ class OpenDxpElementManagerExtension extends AbstractModelExtension
         $container->getDefinition(MetadataRegistry::class)->addMethodCall('register', [
             new Reference(\sprintf('opendxp_element_manager.metadata.%s', \strtolower($className))),
         ]);
+    }
+
+    /**
+     * Registers factory + repository services for each resource declared in config.
+     *
+     * Factory: `<app>.<resource>.factory`, autowired by constructor(modelClass).
+     * Repository: `<app>.<resource>.repository`, built via EntityManager::getRepository(modelClass)
+     * so Doctrine's `repository-class` ORM mapping returns the custom repository instance.
+     *
+     * Aliases the declared interfaces to the registered service IDs so type-hinted
+     * constructors and service configs can resolve them.
+     */
+    private function registerResources(string $applicationName, array $resources, ContainerBuilder $container): void
+    {
+        foreach ($resources as $resourceName => $resourceConfig) {
+            $this->registerFactoryService($container, $applicationName, $resourceName, $resourceConfig['classes']);
+            $this->registerRepositoryService($container, $applicationName, $resourceName, $resourceConfig['classes']);
+        }
+    }
+
+    private function registerFactoryService(ContainerBuilder $container, string $applicationName, string $resourceName, array $classes): void
+    {
+        $factoryClass = $classes['factory'] ?? DefaultFactory::class;
+        $definition = new Definition($factoryClass, [$classes['model']]);
+        $definition->setPublic(true);
+        $container->setDefinition($applicationName . '.factory.' . $resourceName, $definition);
+    }
+
+    private function registerRepositoryService(ContainerBuilder $container, string $applicationName, string $resourceName, array $classes): void
+    {
+        if (!isset($classes['repository'])) {
+            return;
+        }
+
+        $serviceId = $applicationName . '.repository.' . $resourceName;
+
+        $definition = new Definition($classes['repository']);
+        $definition->setFactory([new Reference('doctrine.orm.entity_manager'), 'getRepository']);
+        $definition->setArguments([$classes['model']]);
+        $definition->setPublic(true);
+        $container->setDefinition($serviceId, $definition);
+
+        $interface = $this->guessRepositoryInterface($classes['repository']);
+        if ($interface !== null) {
+            $container->setAlias($interface, $serviceId)->setPublic(true);
+        }
+    }
+
+    private function guessRepositoryInterface(string $repositoryClass): ?string
+    {
+        if (!\class_exists($repositoryClass)) {
+            return null;
+        }
+        $interfaces = \class_implements($repositoryClass) ?: [];
+        foreach ($interfaces as $iface) {
+            if (\str_ends_with($iface, 'RepositoryInterface') && !\str_contains($iface, 'Resource\\Repository')) {
+                return $iface;
+            }
+        }
+        return null;
+    }
+
+    private function registerOpenDxpResources(string $applicationName, array $config, ContainerBuilder $container): void
+    {
+        $container->setParameter($applicationName . '.opendxp_admin.js', $config['js'] ?? []);
+        $container->setParameter($applicationName . '.opendxp_admin.css', $config['css'] ?? []);
+        $container->setParameter($applicationName . '.opendxp_admin.editmode_js', $config['editmode_js'] ?? []);
+        $container->setParameter($applicationName . '.opendxp_admin.editmode_css', $config['editmode_css'] ?? []);
+        $container->setParameter($applicationName . '.permissions', $config['permissions'] ?? []);
     }
 }

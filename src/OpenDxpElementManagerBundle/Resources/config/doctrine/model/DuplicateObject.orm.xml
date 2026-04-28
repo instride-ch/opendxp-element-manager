@@ -4,7 +4,7 @@
                   xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                                       http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <mapped-superclass name="Instride\Bundle\OpenDxpElementManagerBundle\Model\DuplicateObject" table="opendxp_element_manager_duplicate_object">
+    <entity name="Instride\Bundle\OpenDxpElementManagerBundle\Model\DuplicateObject" repository-class="Instride\Bundle\OpenDxpElementManagerBundle\Repository\DuplicateObjectRepository" table="opendxp_element_manager_duplicate_object">
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
@@ -15,8 +15,12 @@
         <field name="modificationDate" type="datetime" column="modificationDate" nullable="true">
             <gedmo:timestampable on="update"/>
         </field>
-        <many-to-one field="duplicate" target-entity="Instride\Bundle\OpenDxpElementManagerBundle\Model\DuplicateInterface" inversed-by="objects" cascade="all">
+        <many-to-one field="duplicate" target-entity="Instride\Bundle\OpenDxpElementManagerBundle\Model\Duplicate" inversed-by="objects" cascade="all">
             <join-column name="duplicate_id" referenced-column-name="id" on-delete="CASCADE" on-update="CASCADE"/>
         </many-to-one>
-    </mapped-superclass>
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="onPrePersist"/>
+            <lifecycle-callback type="preUpdate" method="onPreUpdate"/>
+        </lifecycle-callbacks>
+    </entity>
 </doctrine-mapping>

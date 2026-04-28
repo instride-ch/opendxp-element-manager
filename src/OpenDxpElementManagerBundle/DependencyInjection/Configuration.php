@@ -11,15 +11,14 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE.md and gpl-3.0.txt
  * files that are distributed with this source code.
  *
- * @copyright 2024 instride AG (https://instride.ch)
+ * @copyright 2026 instride AG (https://instride.ch)
  * @license   https://github.com/instride-ch/opendxp-element-manager/blob/main/gpl-3.0.txt GNU General Public License version 3 (GPLv3)
  */
 
 namespace Instride\Bundle\OpenDxpElementManagerBundle\DependencyInjection;
 
-use CoreShop\Bundle\ResourceBundle\CoreShopResourceBundle;
-use CoreShop\Component\Resource\Factory\Factory;
 use Instride\Bundle\OpenDxpElementManagerBundle\Controller\Admin\DuplicatesIndexController;
+use Instride\Bundle\OpenDxpElementManagerBundle\Resource\Factory\Factory;
 use Instride\Bundle\OpenDxpElementManagerBundle\Model\Duplicate;
 use Instride\Bundle\OpenDxpElementManagerBundle\Model\DuplicateFalsePositive;
 use Instride\Bundle\OpenDxpElementManagerBundle\Model\DuplicateFalsePositiveInterface;
@@ -46,11 +45,6 @@ class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder('opendxp_element_manager');
         $rootNode = $treeBuilder->getRootNode();
-
-        $rootNode
-            ->children()
-                ->scalarNode('driver')->defaultValue(CoreShopResourceBundle::DRIVER_DOCTRINE_ORM)->end()
-            ->end();
 
         $this->addDuplicationSection($rootNode);
         $this->addSaveManagerSection($rootNode);

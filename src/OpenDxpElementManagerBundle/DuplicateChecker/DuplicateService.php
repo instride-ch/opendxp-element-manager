@@ -11,7 +11,7 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE.md and gpl-3.0.txt
  * files that are distributed with this source code.
  *
- * @copyright 2024 instride AG (https://instride.ch)
+ * @copyright 2026 instride AG (https://instride.ch)
  * @license   https://github.com/instride-ch/opendxp-element-manager/blob/main/gpl-3.0.txt GNU General Public License version 3 (GPLv3)
  */
 
@@ -21,9 +21,9 @@ use OpenDxp\Model\Element\ElementInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class DuplicateService implements DuplicateServiceInterface
+readonly class DuplicateService implements DuplicateServiceInterface
 {
-    public function __construct(private readonly ValidatorInterface $duplicateChecker) {}
+    public function __construct(private ValidatorInterface $duplicateChecker) {}
 
     /**
      * @inheritDoc

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * OpenDxp Element Manager.
+ * OpenDXP Element Manager.
  *
  * LICENSE
  *
@@ -11,40 +11,30 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE.md and gpl-3.0.txt
  * files that are distributed with this source code.
  *
- * @copyright 2024 instride AG (https://instride.ch)
+ * @copyright 2026 instride AG (https://instride.ch)
  * @license   https://github.com/instride-ch/opendxp-element-manager/blob/main/gpl-3.0.txt GNU General Public License version 3 (GPLv3)
  */
 
 namespace Instride\Bundle\OpenDxpElementManagerBundle;
 
 use Composer\InstalledVersions;
-use CoreShop\Bundle\ResourceBundle\AbstractResourceBundle;
-use CoreShop\Bundle\ResourceBundle\CoreShopResourceBundle;
+use Doctrine\Bundle\DoctrineBundle\DependencyInjection\Compiler\DoctrineOrmMappingsPass;
 use Instride\Bundle\OpenDxpElementManagerBundle\DependencyInjection\CompilerPass\AddDataTransformersPass;
 use Instride\Bundle\OpenDxpElementManagerBundle\DependencyInjection\CompilerPass\AddSaveHandlerPass;
 use Instride\Bundle\OpenDxpElementManagerBundle\DependencyInjection\CompilerPass\AddSimilarityCheckerPass;
+use Instride\Bundle\OpenDxpElementManagerBundle\DependencyInjection\OpenDxpElementManagerExtension;
+use OpenDxp\Extension\Bundle\AbstractOpenDxpBundle;
+use OpenDxp\Extension\Bundle\OpenDxpBundleAdminClassicInterface;
+use OpenDxp\Extension\Bundle\Traits\BundleAdminClassicTrait;
 use OpenDxp\Extension\Bundle\Traits\PackageVersionTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\Validator\DependencyInjection\AddConstraintValidatorsPass;
 
-class OpenDxpElementManagerBundle extends AbstractResourceBundle
+class OpenDxpElementManagerBundle extends AbstractOpenDxpBundle implements OpenDxpBundleAdminClassicInterface
 {
+    use BundleAdminClassicTrait;
     use PackageVersionTrait;
-
-    /**
-     * @inheritDoc
-     */
-    public function getSupportedDrivers(): array
-    {
-        return [
-            CoreShopResourceBundle::DRIVER_DOCTRINE_ORM,
-        ];
-    }
-
-    protected function getModelNamespace(): ?string
-    {
-        return 'Instride\Bundle\OpenDxpElementManagerBundle\Model';
-    }
 
     /**
      * @inheritDoc
@@ -52,6 +42,13 @@ class OpenDxpElementManagerBundle extends AbstractResourceBundle
     public function build(ContainerBuilder $container): void
     {
         parent::build($container);
+
+        $container->addCompilerPass(DoctrineOrmMappingsPass::createXmlMappingDriver(
+            [
+                \realpath(__DIR__ . '/Resources/config/doctrine/model') => 'Instride\\Bundle\\OpenDxpElementManagerBundle\\Model',
+            ],
+            ['doctrine.default_entity_manager'],
+        ));
 
         $container->addCompilerPass(new AddConstraintValidatorsPass(
             'duplication_checker.validator_factory',
@@ -67,7 +64,7 @@ class OpenDxpElementManagerBundle extends AbstractResourceBundle
      */
     public function getNiceName(): string
     {
-        return 'OpenDxp Element Manager';
+        return 'OpenDXP Element Manager';
     }
 
     /**
@@ -75,7 +72,7 @@ class OpenDxpElementManagerBundle extends AbstractResourceBundle
      */
     public function getDescription(): string
     {
-        return 'Manages OpenDxp Element\'s with ease.';
+        return 'Manages OpenDXP Element\'s with ease.';
     }
 
     /**
@@ -95,5 +92,30 @@ class OpenDxpElementManagerBundle extends AbstractResourceBundle
         }
 
         return '';
+    }
+
+    public function getJsPaths(): array
+    {
+        return [
+            '/bundles/opendxpelementmanager/opendxp/js/duplication_index/item.js',
+            '/bundles/opendxpelementmanager/opendxp/js/duplication_index/panel.js',
+            '/bundles/opendxpelementmanager/opendxp/js/startup.js',
+        ];
+    }
+
+    public function getCssPaths(): array
+    {
+        return [
+            '/bundles/opendxpelementmanager/opendxp/css/opendxpelementmanager.css',
+        ];
+    }
+
+    public function getContainerExtension(): ?ExtensionInterface
+    {
+        if (null === $this->extension) {
+            $this->extension = new OpenDxpElementManagerExtension();
+        }
+
+        return $this->extension ?: null;
     }
 }

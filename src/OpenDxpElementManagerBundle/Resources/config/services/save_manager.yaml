@@ -1,7 +1,10 @@
 services:
+    opendxp_element_manager.expression_language:
+        class: Symfony\Component\ExpressionLanguage\ExpressionLanguage
+
     Instride\Bundle\OpenDxpElementManagerBundle\SaveManager\NamingScheme\ExpressionNamingScheme:
         arguments:
-            - '@coreshop.expression_language'
+            - '@opendxp_element_manager.expression_language'
             - '@Symfony\Component\HttpFoundation\RequestStack'
             - '@OpenDxp\Http\Request\Resolver\OpenDxpContextResolver'
 
@@ -25,3 +28,4 @@ services:
             - { name: kernel.event_listener, event: opendxp.dataobject.postDelete, method: onPostDelete }
 
     Instride\Bundle\OpenDxpElementManagerBundle\SaveManager\ObjectSaveManagers: ~
+    Instride\Bundle\OpenDxpElementManagerBundle\SaveManager\UniqueKeySaveHandler: ~

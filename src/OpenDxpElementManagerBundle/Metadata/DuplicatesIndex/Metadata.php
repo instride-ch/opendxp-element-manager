@@ -11,7 +11,7 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE.md and gpl-3.0.txt
  * files that are distributed with this source code.
  *
- * @copyright 2024 instride AG (https://instride.ch)
+ * @copyright 2026 instride AG (https://instride.ch)
  * @license   https://github.com/instride-ch/opendxp-element-manager/blob/main/gpl-3.0.txt GNU General Public License version 3 (GPLv3)
  */
 
@@ -24,6 +24,13 @@ class Metadata implements MetadataInterface
      * @param string[]                 $listFields
      */
     public function __construct(private string $className, private array $groups, private array $listFields) {}
+
+    public static function fromAliasAndConfiguration(string $alias, array $parameters): self
+    {
+        [$applicationName, $name] = self::parseAlias($alias);
+
+        return new self($name, $applicationName, $parameters);
+    }
 
     public function getClassName(): string
     {
@@ -66,5 +73,14 @@ class Metadata implements MetadataInterface
         );
 
         return \reset($filteredGroups);
+    }
+
+    private static function parseAlias($alias): array
+    {
+        if (!str_contains($alias, '.')) {
+            throw new \InvalidArgumentException('Invalid alias supplied, it should conform to the following format "<applicationName>.<name>".');
+        }
+
+        return explode('.', $alias);
     }
 }

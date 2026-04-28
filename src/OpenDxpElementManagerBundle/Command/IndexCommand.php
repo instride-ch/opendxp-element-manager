@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * OpenDxp Element Manager.
+ * OpenDXP Element Manager.
  *
  * LICENSE
  *
@@ -11,14 +11,13 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE.md and gpl-3.0.txt
  * files that are distributed with this source code.
  *
- * @copyright 2024 instride AG (https://instride.ch)
+ * @copyright 2026 instride AG (https://instride.ch)
  * @license   https://github.com/instride-ch/opendxp-element-manager/blob/main/gpl-3.0.txt GNU General Public License
  *            version 3 (GPLv3)
  */
 
 namespace Instride\Bundle\OpenDxpElementManagerBundle\Command;
 
-use CoreShop\Component\OpenDxp\BatchProcessing\BatchListing;
 use Doctrine\ORM\NonUniqueResultException;
 use OpenDxp\Model\DataObject\AbstractObject;
 use OpenDxp\Model\DataObject\Concrete;
@@ -64,23 +63,37 @@ class IndexCommand extends Command
             $list->setObjectTypes([AbstractObject::OBJECT_TYPE_OBJECT, AbstractObject::OBJECT_TYPE_VARIANT]);
             $perLoop = 10;
 
-            $batchList = new BatchListing($list, $perLoop);
+            $total = $list->getTotalCount();
+            $output->writeln(\sprintf('<info>Processing %s Objects of class "%s"</info>', $total, $class));
 
-            $output->writeln(
-                \sprintf('<info>Processing %s Objects of class "%s"</info>', $batchList->count(), $class)
-            );
-            $progress = new ProgressBar($output, $batchList->count());
+            $progress = new ProgressBar($output, $total);
             $progress->setFormat(
                 '%current%/%max% [%bar%] %percent:3s%% (%elapsed:6s%/%estimated:-6s%) %memory:6s%: %message%'
             );
             $progress->start();
 
-            /** @var Concrete $object */
-            foreach ($batchList as $object) {
-                $progress->setMessage(\sprintf('Index %s (%s)', $object->getFullPath(), $object->getId()));
-                $progress->advance();
 
-                $this->indexWorker->updateIndex($index, $object);
+            $list->setLimit($perLoop);
+            $offset = 0;
+
+            while (true) {
+                $list->setOffset($offset);
+                $ids = $list->loadIdList();
+
+                if (!$ids) {
+                    break;
+                }
+
+                /** @var Concrete $object */
+                foreach ($list as $object) {
+                    $progress->setMessage(\sprintf('Index %s (%s)', $object->getFullPath(), $object->getId()));
+                    $progress->advance();
+
+                    $this->indexWorker->updateIndex($index, $object);
+                }
+
+                $offset += $perLoop;
+                \OpenDxp::collectGarbage();
             }
 
             $progress->finish();

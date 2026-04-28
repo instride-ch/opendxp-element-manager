@@ -11,13 +11,13 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE.md and gpl-3.0.txt
  * files that are distributed with this source code.
  *
- * @copyright 2024 instride AG (https://instride.ch)
+ * @copyright 2026 instride AG (https://instride.ch)
  * @license   https://github.com/instride-ch/opendxp-element-manager/blob/main/gpl-3.0.txt GNU General Public License version 3 (GPLv3)
  */
 
 namespace Instride\Bundle\OpenDxpElementManagerBundle\Repository;
 
-use CoreShop\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
+use Instride\Bundle\OpenDxpElementManagerBundle\Resource\Repository\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Instride\Bundle\OpenDxpElementManagerBundle\Model\DuplicateObjectInterface;
@@ -57,7 +57,7 @@ class PotentialDuplicateRepository extends EntityRepository implements Potential
             ->setFirstResult($limit * $offset)
             ->setMaxResults($limit)
             ->getQuery()
-            ->enableResultCache()
+            // ->enableResultCache()
             ->useQueryCache(true)
             ->getResult()
         ;
@@ -90,7 +90,7 @@ class PotentialDuplicateRepository extends EntityRepository implements Potential
             ->setParameter('duplicate1', $duplicateObject1)
             ->setParameter('duplicate2', $duplicateObject2)
             ->getQuery()
-            ->enableResultCache()
+            // ->enableResultCache()
             ->useQueryCache(true)
             ->getOneOrNullResult();
     }

@@ -4,9 +4,9 @@ services:
 
     Instride\Bundle\OpenDxpElementManagerBundle\Command\IndexCommand:
         arguments:
-          - '@Instride\Bundle\OpenDxpElementManagerBundle\Metadata\DuplicatesIndex\MetadataRegistry'
-          - '@Instride\Bundle\OpenDxpElementManagerBundle\DuplicateIndex\DuplicatesIndexWorker'
-          - '@Instride\Bundle\OpenDxpElementManagerBundle\DuplicateIndex\DuplicateFinder'
-          - '@event_dispatcher'
+            - '@Instride\Bundle\OpenDxpElementManagerBundle\Metadata\DuplicatesIndex\MetadataRegistry'
+            - '@Instride\Bundle\OpenDxpElementManagerBundle\DuplicateIndex\DuplicatesIndexWorker'
+            - '@Instride\Bundle\OpenDxpElementManagerBundle\DuplicateIndex\DuplicateFinder'
+            - '@event_dispatcher'
         tags:
-          - { name: console.command, command: 'opendxp-element-manager:duplicate-index' }
+            - { name: console.command, command: 'opendxp-element-manager:duplicate-index' }

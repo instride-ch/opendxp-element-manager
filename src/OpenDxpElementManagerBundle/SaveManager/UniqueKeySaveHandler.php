@@ -11,7 +11,7 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE.md and gpl-3.0.txt
  * files that are distributed with this source code.
  *
- * @copyright 2024 instride AG (https://instride.ch)
+ * @copyright 2026 instride AG (https://instride.ch)
  * @license   https://github.com/instride-ch/opendxp-element-manager/blob/main/gpl-3.0.txt GNU General Public License version 3 (GPLv3)
  */
 
@@ -20,14 +20,16 @@ namespace Instride\Bundle\OpenDxpElementManagerBundle\SaveManager;
 use OpenDxp\Model\DataObject\Concrete;
 use OpenDxp\Model\DataObject\Service;
 
-class UniqueKeySaveHandler implements PostObjectSaveHandlerInterface
+class UniqueKeySaveHandler extends AbstractObjectSaveHandler
 {
     use PostObjectSaveHandlerTrait;
 
     /**
+     * @param Concrete $object
+     * @param array $options
      * @throws \Exception
      */
-    public function preSave(Concrete $object): void
+    public function preSave(Concrete $object, array $options): void
     {
         $object->setKey(Service::getUniqueKey($object));
     }
