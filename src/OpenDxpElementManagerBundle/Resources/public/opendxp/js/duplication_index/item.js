@@ -109,7 +109,7 @@ opendxp.bundle.elementmanager.duplicationIndex.item = Class.create({
             dataIndex: '_isFirstColumn',
             width: 50,
             align: 'right',
-            renderer: function (value, metadata, record, store) {
+            renderer: function (value, metadata, record, rowIndex, colIndex, store, view) {
                 if (!value) {
                     return '';
                 }
@@ -129,8 +129,13 @@ opendxp.bundle.elementmanager.duplicationIndex.item = Class.create({
                                     method: 'post',
                                     params: { id: record.get('duplicationId') },
                                     success: function () {
-                                        store.load();
-                                    },
+                                        const grid = view && view.up('grid');
+                                        const gridStore = grid && grid.getStore();
+
+                                        if (gridStore && Ext.isFunction(gridStore.load)) {
+                                            gridStore.load();
+                                        }
+                                    }
                                 });
                             },
                         });
