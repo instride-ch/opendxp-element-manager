@@ -78,13 +78,14 @@ class DuplicatesIndexController extends AdminAbstractController
 
     /**
      * @throws ExceptionInterface
+     * @throws \Exception
      */
     public function getPotentialDuplicatesAction(Request $request): JsonResponse
     {
-        $declined = $request->get('declined', false);
-        $metadata = $this->findByClassNameOr404($request->get('className'));
-        $offset = (int) $request->get('offset', 0);
-        $limit = (int) $request->get('limit', 50);
+        $declined = $request->query->get('declined', false);
+        $metadata = $this->findByClassNameOr404($request->query->get('className'));
+        $offset = (int) $request->query->get('offset', 0);
+        $limit = (int) $request->query->get('limit', 50);
 
         $declined = $declined === 'true';
 
@@ -151,7 +152,7 @@ class DuplicatesIndexController extends AdminAbstractController
      */
     public function declineDuplicationAction(Request $request): JsonResponse
     {
-        $potentialDuplicate = $this->potentialDuplicateRepository->find($request->get('id'));
+        $potentialDuplicate = $this->potentialDuplicateRepository->find($request->request->get('id'));
 
         if (!$potentialDuplicate instanceof PotentialDuplicateInterface) {
             throw $this->createNotFoundException();
@@ -170,7 +171,7 @@ class DuplicatesIndexController extends AdminAbstractController
      */
     public function unDeclineDuplicationAction(Request $request): JsonResponse
     {
-        $potentialDuplicate = $this->potentialDuplicateRepository->find($request->get('id'));
+        $potentialDuplicate = $this->potentialDuplicateRepository->find($request->request->get('id'));
 
         if (!$potentialDuplicate instanceof PotentialDuplicateInterface) {
             throw $this->createNotFoundException();

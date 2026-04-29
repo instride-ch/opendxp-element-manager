@@ -28,7 +28,7 @@ readonly class DuplicateService implements DuplicateServiceInterface
     /**
      * @inheritDoc
      */
-    public function findDuplicates(ElementInterface $element, array $groups = null): array
+    public function findDuplicates(ElementInterface $element, ?array $groups): array
     {
         $result = $this->duplicateChecker->validate($element, null, $groups);
 

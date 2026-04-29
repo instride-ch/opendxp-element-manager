@@ -18,7 +18,7 @@ declare(strict_types=1);
 namespace Instride\Bundle\OpenDxpElementManagerBundle\Model;
 
 use Instride\Bundle\OpenDxpElementManagerBundle\Resource\AbstractResource;
-use Instride\Bundle\OpenDxpElementManagerBundle\Resource\TimestampableTrait;
+use Instride\Bundle\OpenDxpElementManagerBundle\Trait\TimestampableTrait;
 use OpenDxp\Model\DataObject\Concrete;
 
 class DuplicateObject extends AbstractResource implements DuplicateObjectInterface
@@ -29,9 +29,6 @@ class DuplicateObject extends AbstractResource implements DuplicateObjectInterfa
     protected Concrete $object;
     protected DuplicateInterface $duplicate;
 
-    /**
-     * @inheritDoc
-     */
     public function getId(): int
     {
         return $this->id;

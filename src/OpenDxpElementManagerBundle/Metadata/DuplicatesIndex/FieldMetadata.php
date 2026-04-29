@@ -17,9 +17,9 @@ declare(strict_types=1);
 
 namespace Instride\Bundle\OpenDxpElementManagerBundle\Metadata\DuplicatesIndex;
 
-class FieldMetadata implements FieldMetadataInterface
+readonly class FieldMetadata implements FieldMetadataInterface
 {
-    public function __construct(private readonly string $name, private readonly array $config) {}
+    public function __construct(private string $name, private array $config) {}
 
     public function getName(): string
     {

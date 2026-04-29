@@ -18,7 +18,7 @@ declare(strict_types=1);
 namespace Instride\Bundle\OpenDxpElementManagerBundle\Model;
 
 use Instride\Bundle\OpenDxpElementManagerBundle\Resource\ResourceInterface;
-use Instride\Bundle\OpenDxpElementManagerBundle\Resource\TimestampableInterface;
+use Instride\Bundle\OpenDxpElementManagerBundle\Trait\TimestampableInterface;
 use OpenDxp\Model\DataObject\Concrete;
 
 interface DuplicateInterface extends ResourceInterface, TimestampableInterface

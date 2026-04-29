@@ -18,7 +18,7 @@ declare(strict_types=1);
 namespace Instride\Bundle\OpenDxpElementManagerBundle\Model;
 
 use Instride\Bundle\OpenDxpElementManagerBundle\Resource\AbstractResource;
-use Instride\Bundle\OpenDxpElementManagerBundle\Resource\TimestampableTrait;
+use Instride\Bundle\OpenDxpElementManagerBundle\Trait\TimestampableTrait;
 
 class DuplicateFalsePositive extends AbstractResource implements DuplicateFalsePositiveInterface
 {
@@ -26,9 +26,6 @@ class DuplicateFalsePositive extends AbstractResource implements DuplicateFalseP
 
     protected int $id;
 
-    /**
-     * @inheritDoc
-     */
     public function getId(): int
     {
         return $this->id;

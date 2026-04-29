@@ -38,9 +38,4 @@ class ObjectSaveManagers
 
         return $this->saveManagers[$concrete->getClassName()];
     }
-
-    public function addSaveManager(string $class, ObjectSaveManagerInterface $saveManager): void
-    {
-        $this->saveManagers[$class] = $saveManager;
-    }
 }

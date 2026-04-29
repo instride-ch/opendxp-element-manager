@@ -19,7 +19,7 @@ namespace Instride\Bundle\OpenDxpElementManagerBundle\Model;
 
 use Doctrine\ORM\PersistentCollection;
 use Instride\Bundle\OpenDxpElementManagerBundle\Resource\AbstractResource;
-use Instride\Bundle\OpenDxpElementManagerBundle\Resource\TimestampableTrait;
+use Instride\Bundle\OpenDxpElementManagerBundle\Trait\TimestampableTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use OpenDxp\Model\DataObject\Concrete;
 
@@ -44,9 +44,6 @@ class Duplicate extends AbstractResource implements DuplicateInterface
         $this->objects = new ArrayCollection();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getId(): int
     {
         return $this->id;

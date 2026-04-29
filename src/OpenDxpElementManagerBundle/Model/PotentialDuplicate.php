@@ -18,7 +18,7 @@ declare(strict_types=1);
 namespace Instride\Bundle\OpenDxpElementManagerBundle\Model;
 
 use Instride\Bundle\OpenDxpElementManagerBundle\Resource\AbstractResource;
-use Instride\Bundle\OpenDxpElementManagerBundle\Resource\TimestampableTrait;
+use Instride\Bundle\OpenDxpElementManagerBundle\Trait\TimestampableTrait;
 
 class PotentialDuplicate extends AbstractResource implements PotentialDuplicateInterface
 {
@@ -29,9 +29,6 @@ class PotentialDuplicate extends AbstractResource implements PotentialDuplicateI
     protected DuplicateObjectInterface $duplicateTo;
     protected bool $declined = false;
 
-    /**
-     * @inheritDoc
-     */
     public function getId(): int
     {
         return $this->id;

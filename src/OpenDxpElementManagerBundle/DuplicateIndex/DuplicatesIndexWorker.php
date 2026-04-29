@@ -17,7 +17,7 @@ declare(strict_types=1);
 
 namespace Instride\Bundle\OpenDxpElementManagerBundle\DuplicateIndex;
 
-use Instride\Bundle\OpenDxpElementManagerBundle\Resource\Factory\FactoryInterface;
+use Instride\Bundle\OpenDxpElementManagerBundle\Factory\FactoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Instride\Bundle\OpenDxpElementManagerBundle\DuplicateIndex\DataTransformer\DataTransformerFactoryInterface;
@@ -31,15 +31,15 @@ use Instride\Bundle\OpenDxpElementManagerBundle\Repository\DuplicateRepositoryIn
 use OpenDxp\Model\DataObject\Concrete;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
-class DuplicatesIndexWorker implements DuplicatesIndexWorkerInterface
+readonly class DuplicatesIndexWorker implements DuplicatesIndexWorkerInterface
 {
     public function __construct(
-        private readonly DataTransformerFactoryInterface $dataTransformerFactory,
-        private readonly EntityManagerInterface $entityManager,
-        private readonly DuplicateRepositoryInterface $duplicateRepository,
-        private readonly DuplicateObjectRepositoryInterface $duplicateObjectRepository,
-        private readonly FactoryInterface $duplicateFactory,
-        private readonly FactoryInterface $duplicateObjectFactory
+        private DataTransformerFactoryInterface    $dataTransformerFactory,
+        private EntityManagerInterface             $entityManager,
+        private DuplicateRepositoryInterface       $duplicateRepository,
+        private DuplicateObjectRepositoryInterface $duplicateObjectRepository,
+        private FactoryInterface                   $duplicateFactory,
+        private FactoryInterface                   $duplicateObjectFactory
     ) {}
 
     /**

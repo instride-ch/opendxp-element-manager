@@ -17,9 +17,8 @@ declare(strict_types=1);
 
 namespace Instride\Bundle\OpenDxpElementManagerBundle\DuplicateIndex;
 
-use Instride\Bundle\OpenDxpElementManagerBundle\Resource\Factory\FactoryInterface;
+use Instride\Bundle\OpenDxpElementManagerBundle\Factory\FactoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\NonUniqueResultException;
 use Instride\Bundle\OpenDxpElementManagerBundle\DuplicateIndex\Similarity\SimilarityCheckerFactoryInterface;
 use Instride\Bundle\OpenDxpElementManagerBundle\Metadata\DuplicatesIndex\GroupMetadataInterface;
 use Instride\Bundle\OpenDxpElementManagerBundle\Metadata\DuplicatesIndex\MetadataInterface;
@@ -29,16 +28,18 @@ use Instride\Bundle\OpenDxpElementManagerBundle\Model\PotentialDuplicateInterfac
 use Instride\Bundle\OpenDxpElementManagerBundle\Repository\DuplicateObjectRepositoryInterface;
 use Instride\Bundle\OpenDxpElementManagerBundle\Repository\DuplicateRepositoryInterface;
 use Instride\Bundle\OpenDxpElementManagerBundle\Repository\PotentialDuplicateRepositoryInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
-class DuplicateFinder implements DuplicateFinderInterface
+readonly class DuplicateFinder implements DuplicateFinderInterface
 {
     public function __construct(
-        private readonly SimilarityCheckerFactoryInterface $similarityCheckerFactory,
-        private readonly DuplicateRepositoryInterface $duplicateRepository,
-        private readonly DuplicateObjectRepositoryInterface $duplicateObjectRepository,
-        private readonly PotentialDuplicateRepositoryInterface $potentialDuplicateRepository,
-        private readonly EntityManagerInterface $entityManager,
-        private readonly FactoryInterface $potentialDuplicateFactory
+        private SimilarityCheckerFactoryInterface     $similarityCheckerFactory,
+        private DuplicateRepositoryInterface          $duplicateRepository,
+        private DuplicateObjectRepositoryInterface    $duplicateObjectRepository,
+        private PotentialDuplicateRepositoryInterface $potentialDuplicateRepository,
+        private EntityManagerInterface                $entityManager,
+        private FactoryInterface                      $potentialDuplicateFactory
     ) {}
 
     /**
@@ -121,6 +122,10 @@ class DuplicateFinder implements DuplicateFinderInterface
         return $result;
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     protected function checkForDuplicate(MetadataInterface $metadata, array $duplicateObjects): array
     {
         $grouped = [];
@@ -144,6 +149,10 @@ class DuplicateFinder implements DuplicateFinderInterface
         return \array_merge(...$result);
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     private function checkForDuplicatesInGroup(GroupMetadataInterface $group, array $duplicateObjects): array
     {
         $result = [];
@@ -159,6 +168,10 @@ class DuplicateFinder implements DuplicateFinderInterface
         return $result;
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     protected function duplicatesAreSimilar(
         GroupMetadataInterface $group,
         DuplicateObjectInterface $duplicateObject1,

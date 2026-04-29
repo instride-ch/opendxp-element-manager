@@ -50,10 +50,7 @@ class OpenDxpElementManagerBundle extends AbstractOpenDxpBundle implements OpenD
             ['doctrine.default_entity_manager'],
         ));
 
-        $container->addCompilerPass(new AddConstraintValidatorsPass(
-            'duplication_checker.validator_factory',
-            'duplication_checker.constraint_validator'
-        ));
+        $container->addCompilerPass(new AddConstraintValidatorsPass());
         $container->addCompilerPass(new AddDataTransformersPass());
         $container->addCompilerPass(new AddSimilarityCheckerPass());
         $container->addCompilerPass(new AddSaveHandlerPass());

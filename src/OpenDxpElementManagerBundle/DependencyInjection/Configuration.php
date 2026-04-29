@@ -18,7 +18,7 @@ declare(strict_types=1);
 namespace Instride\Bundle\OpenDxpElementManagerBundle\DependencyInjection;
 
 use Instride\Bundle\OpenDxpElementManagerBundle\Controller\Admin\DuplicatesIndexController;
-use Instride\Bundle\OpenDxpElementManagerBundle\Resource\Factory\Factory;
+use Instride\Bundle\OpenDxpElementManagerBundle\Factory\Factory;
 use Instride\Bundle\OpenDxpElementManagerBundle\Model\Duplicate;
 use Instride\Bundle\OpenDxpElementManagerBundle\Model\DuplicateFalsePositive;
 use Instride\Bundle\OpenDxpElementManagerBundle\Model\DuplicateFalsePositiveInterface;
@@ -222,7 +222,6 @@ class Configuration implements ConfigurationInterface
                                     ->children()
                                         ->scalarNode('model')->defaultValue(Duplicate::class)->cannotBeEmpty()->end()
                                         ->scalarNode('interface')->defaultValue(DuplicateInterface::class)->cannotBeEmpty()->end()
-                                        //->scalarNode('admin_controller')->defaultValue(ResourceController::class)->cannotBeEmpty()->end()
                                         ->scalarNode('factory')->defaultValue(Factory::class)->cannotBeEmpty()->end()
                                         ->scalarNode('repository')->defaultValue(DuplicateRepository::class)->end()
                                     ->end()
@@ -238,7 +237,6 @@ class Configuration implements ConfigurationInterface
                                     ->children()
                                         ->scalarNode('model')->defaultValue(DuplicateFalsePositive::class)->cannotBeEmpty()->end()
                                         ->scalarNode('interface')->defaultValue(DuplicateFalsePositiveInterface::class)->cannotBeEmpty()->end()
-                                        //->scalarNode('admin_controller')->defaultValue(ResourceController::class)->cannotBeEmpty()->end()
                                         ->scalarNode('factory')->defaultValue(Factory::class)->cannotBeEmpty()->end()
                                         ->scalarNode('repository')->cannotBeEmpty()->end()
                                     ->end()
@@ -254,7 +252,6 @@ class Configuration implements ConfigurationInterface
                                     ->children()
                                         ->scalarNode('model')->defaultValue(DuplicateObject::class)->cannotBeEmpty()->end()
                                         ->scalarNode('interface')->defaultValue(DuplicateObjectInterface::class)->cannotBeEmpty()->end()
-                                        //->scalarNode('admin_controller')->defaultValue(ResourceController::class)->cannotBeEmpty()->end()
                                         ->scalarNode('factory')->defaultValue(Factory::class)->cannotBeEmpty()->end()
                                         ->scalarNode('repository')->defaultValue(DuplicateObjectRepository::class)->end()
                                     ->end()

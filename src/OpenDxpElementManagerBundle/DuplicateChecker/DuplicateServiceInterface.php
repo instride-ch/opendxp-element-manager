@@ -24,5 +24,5 @@ interface DuplicateServiceInterface
     /**
      * @return ElementInterface[]
      */
-    public function findDuplicates(ElementInterface $element, array $groups = null): array;
+    public function findDuplicates(ElementInterface $element, ?array $groups): array;
 }

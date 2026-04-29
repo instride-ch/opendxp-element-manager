@@ -21,8 +21,8 @@ use Instride\Bundle\OpenDxpElementManagerBundle\Metadata\DuplicatesIndex\FieldMe
 use Instride\Bundle\OpenDxpElementManagerBundle\Metadata\DuplicatesIndex\GroupMetadata;
 use Instride\Bundle\OpenDxpElementManagerBundle\Metadata\DuplicatesIndex\Metadata;
 use Instride\Bundle\OpenDxpElementManagerBundle\Metadata\DuplicatesIndex\MetadataRegistry;
-use Instride\Bundle\OpenDxpElementManagerBundle\Resource\Doctrine\Type\OpenDxpObjectType;
-use Instride\Bundle\OpenDxpElementManagerBundle\Resource\Factory\Factory as DefaultFactory;
+use Instride\Bundle\OpenDxpElementManagerBundle\Doctrine\Type\OpenDxpObjectType;
+use Instride\Bundle\OpenDxpElementManagerBundle\Factory\Factory as DefaultFactory;
 use Instride\Bundle\OpenDxpElementManagerBundle\SaveManager\DuplicationSaveHandler;
 use Instride\Bundle\OpenDxpElementManagerBundle\SaveManager\NamingSchemeSaveHandler;
 use Instride\Bundle\OpenDxpElementManagerBundle\SaveManager\ObjectSaveManagers;
@@ -254,7 +254,7 @@ class OpenDxpElementManagerExtension extends Extension implements PrependExtensi
 
         /** @var File $file */
         foreach ($files as $file) {
-            $fileRecorder($file->getExtension(), $file->getRealPath());
+            $fileRecorder($file->getExtension(), \realpath($file->getPathname()));
         }
     }
 

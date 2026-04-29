@@ -17,8 +17,6 @@ declare(strict_types=1);
 
 namespace Instride\Bundle\OpenDxpElementManagerBundle\Repository;
 
-use Instride\Bundle\OpenDxpElementManagerBundle\Resource\Repository\EntityRepository;
-use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Instride\Bundle\OpenDxpElementManagerBundle\Model\DuplicateObjectInterface;
 use Instride\Bundle\OpenDxpElementManagerBundle\Model\PotentialDuplicateInterface;

@@ -17,12 +17,12 @@ declare(strict_types=1);
 
 namespace Instride\Bundle\OpenDxpElementManagerBundle\DuplicateChecker\Constraints;
 
-use http\Exception\InvalidArgumentException;
+use Symfony\Component\Uid\Exception\InvalidArgumentException;
 use Instride\Bundle\OpenDxpElementManagerBundle\DuplicateChecker\Constraints\Normalizer\CompareConditionMySqlNormalizer;
 use OpenDxp\Model\DataObject\ClassDefinition;
 use OpenDxp\Model\DataObject\ClassDefinition\Data\QueryResourcePersistenceAwareInterface;
 use OpenDxp\Model\DataObject\Concrete;
-use OpenDxp\Model\DataObject\Listing\Concrete as Listing;
+use OpenDxp\Model\DataObject\Listing as Listing;
 use OpenDxp\Model\Element\ElementInterface;
 use Symfony\Component\Validator\Constraint;
 

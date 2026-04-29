@@ -17,7 +17,7 @@ declare(strict_types=1);
 
 namespace Instride\Bundle\OpenDxpElementManagerBundle\DuplicateChecker\Constraints\Normalizer;
 
-use OpenDxp\Model\DataObject\Listing\Concrete as Listing;
+use OpenDxp\Model\DataObject\Listing;
 use OpenDxp\Model\Element\ElementInterface;
 
 class CompareConditionMySqlNormalizer
@@ -28,7 +28,7 @@ class CompareConditionMySqlNormalizer
         string $value,
         array $duplicateCheckTrimmedFields = []
     ): void {
-        if (\in_array($field, $duplicateCheckTrimmedFields, false)) {
+        if (\in_array($field, $duplicateCheckTrimmedFields)) {
             $list->addConditionParam($field . ' LIKE ?', \mb_strtolower(\trim($value), 'UTF-8'));
         } else {
             $list->addConditionParam('TRIM(LCASE(' . $field . ')) = ?', \mb_strtolower(\trim($value), 'UTF-8'));

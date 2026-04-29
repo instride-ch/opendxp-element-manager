@@ -17,7 +17,6 @@ declare(strict_types=1);
 
 namespace Instride\Bundle\OpenDxpElementManagerBundle\Repository;
 
-use Instride\Bundle\OpenDxpElementManagerBundle\Resource\Repository\EntityRepository;
 use OpenDxp\Model\DataObject\Concrete;
 use Instride\Bundle\OpenDxpElementManagerBundle\Model\DuplicateInterface;
 
