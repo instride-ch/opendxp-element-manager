@@ -23,7 +23,9 @@ use OpenDxp\Model\DataObject\Concrete;
 
 class DuplicationSaveHandler extends AbstractObjectSaveHandler
 {
-    public function __construct(private readonly DuplicateServiceInterface $duplicateService) {}
+    public function __construct(private readonly DuplicateServiceInterface $duplicateService)
+    {
+    }
 
     /**
      * @throws DuplicatesException

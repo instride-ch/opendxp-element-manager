@@ -24,7 +24,9 @@ use OpenDxp\Model\DataObject;
 
 readonly class ObjectEventListener
 {
-    public function __construct(private ObjectSaveManagers $saveManagers) {}
+    public function __construct(private ObjectSaveManagers $saveManagers)
+    {
+    }
 
     /**
      * @param ElementEventInterface $event

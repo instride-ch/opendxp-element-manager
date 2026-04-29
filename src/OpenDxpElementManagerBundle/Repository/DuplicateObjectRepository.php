@@ -57,7 +57,6 @@ class DuplicateObjectRepository extends EntityRepository implements DuplicateObj
             ->setParameter('objectId', $currentId)
             ->setParameter('metaphone', $metaphone)
             ->getQuery()
-            // ->enableResultCache()
             ->useQueryCache(true)
             ->getResult();
     }
@@ -71,7 +70,6 @@ class DuplicateObjectRepository extends EntityRepository implements DuplicateObj
             ->setParameter('objectId', $currentId)
             ->setParameter('soundex', $soundex)
             ->getQuery()
-            // ->enableResultCache()
             ->useQueryCache(true)
             ->getResult();
     }
@@ -89,7 +87,6 @@ class DuplicateObjectRepository extends EntityRepository implements DuplicateObj
             ->having('count(o.id) > 1')
             ->orderBy('count(o.id)')
             ->getQuery()
-            // ->enableResultCache()
             ->useQueryCache(true)
             ->getResult();
     }
@@ -103,7 +100,6 @@ class DuplicateObjectRepository extends EntityRepository implements DuplicateObj
             ->where('o.duplicate = :duplicate')
             ->setParameter('duplicate', $duplicate)
             ->getQuery()
-            // ->enableResultCache()
             ->useQueryCache(true)
             ->getResult();
     }

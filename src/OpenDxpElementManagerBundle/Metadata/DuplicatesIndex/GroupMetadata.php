@@ -22,7 +22,9 @@ class GroupMetadata implements GroupMetadataInterface
     /**
      * @param FieldMetadataInterface[] $fields
      */
-    public function __construct(private string $name, private array $fields) {}
+    public function __construct(private string $name, private array $fields)
+    {
+    }
 
     public function getName(): string
     {

@@ -25,9 +25,9 @@ class PotentialDuplicate extends AbstractResource implements PotentialDuplicateI
     use TimestampableTrait;
 
     protected int $id;
-    protected DuplicateObjectInterface $duplicateFrom;
-    protected DuplicateObjectInterface $duplicateTo;
-    protected bool $declined = false;
+    public DuplicateObjectInterface $duplicateFrom;
+    public DuplicateObjectInterface $duplicateTo;
+    public bool $declined = false;
 
     public function getId(): int
     {

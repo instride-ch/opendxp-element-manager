@@ -24,7 +24,9 @@ class ContainerDataTransformerFactory implements DataTransformerFactoryInterface
 {
     private array $dataTransformers = [];
 
-    public function __construct(private readonly ContainerInterface $container) {}
+    public function __construct(private readonly ContainerInterface $container)
+    {
+    }
 
     public function getInstance(string $identifier): DataTransformerInterface
     {

@@ -17,12 +17,12 @@ declare(strict_types=1);
 
 namespace Instride\Bundle\OpenDxpElementManagerBundle\DependencyInjection;
 
+use Instride\Bundle\OpenDxpElementManagerBundle\Doctrine\Type\OpenDxpObjectType;
+use Instride\Bundle\OpenDxpElementManagerBundle\Factory\Factory as DefaultFactory;
 use Instride\Bundle\OpenDxpElementManagerBundle\Metadata\DuplicatesIndex\FieldMetadata;
 use Instride\Bundle\OpenDxpElementManagerBundle\Metadata\DuplicatesIndex\GroupMetadata;
 use Instride\Bundle\OpenDxpElementManagerBundle\Metadata\DuplicatesIndex\Metadata;
 use Instride\Bundle\OpenDxpElementManagerBundle\Metadata\DuplicatesIndex\MetadataRegistry;
-use Instride\Bundle\OpenDxpElementManagerBundle\Doctrine\Type\OpenDxpObjectType;
-use Instride\Bundle\OpenDxpElementManagerBundle\Factory\Factory as DefaultFactory;
 use Instride\Bundle\OpenDxpElementManagerBundle\SaveManager\DuplicationSaveHandler;
 use Instride\Bundle\OpenDxpElementManagerBundle\SaveManager\NamingSchemeSaveHandler;
 use Instride\Bundle\OpenDxpElementManagerBundle\SaveManager\ObjectSaveManagers;
@@ -76,12 +76,10 @@ class OpenDxpElementManagerExtension extends Extension implements PrependExtensi
         $loader->load('services/save_manager.yaml');
 
         $this->registerResources(
-            'opendxp_element_manager',
             $config['resources'],
             $container
         );
         $this->registerOpenDxpResources(
-            'opendxp_element_manager',
             $config['opendxp_admin'],
             $container
         );
@@ -347,7 +345,7 @@ class OpenDxpElementManagerExtension extends Extension implements PrependExtensi
     }
 
     /**
-     * Registers factory + repository services for each resource declared in config.
+     * Registers factory and repository services for each resource declared in config.
      *
      * Factory: `<app>.<resource>.factory`, autowired by constructor(modelClass).
      * Repository: `<app>.<resource>.repository`, built via EntityManager::getRepository(modelClass)
@@ -356,8 +354,10 @@ class OpenDxpElementManagerExtension extends Extension implements PrependExtensi
      * Aliases the declared interfaces to the registered service IDs so type-hinted
      * constructors and service configs can resolve them.
      */
-    private function registerResources(string $applicationName, array $resources, ContainerBuilder $container): void
+    private function registerResources(array $resources, ContainerBuilder $container): void
     {
+        $applicationName = 'opendxp_element_manager';
+
         foreach ($resources as $resourceName => $resourceConfig) {
             $this->registerFactoryService($container, $applicationName, $resourceName, $resourceConfig['classes']);
             $this->registerRepositoryService($container, $applicationName, $resourceName, $resourceConfig['classes']);
@@ -406,8 +406,10 @@ class OpenDxpElementManagerExtension extends Extension implements PrependExtensi
         return null;
     }
 
-    private function registerOpenDxpResources(string $applicationName, array $config, ContainerBuilder $container): void
+    private function registerOpenDxpResources(array $config, ContainerBuilder $container): void
     {
+        $applicationName = 'opendxp_element_manager';
+
         $container->setParameter($applicationName . '.opendxp_admin.js', $config['js'] ?? []);
         $container->setParameter($applicationName . '.opendxp_admin.css', $config['css'] ?? []);
         $container->setParameter($applicationName . '.opendxp_admin.editmode_js', $config['editmode_js'] ?? []);

@@ -17,10 +17,10 @@ declare(strict_types=1);
 
 namespace Instride\Bundle\OpenDxpElementManagerBundle\DuplicateIndex;
 
-use Instride\Bundle\OpenDxpElementManagerBundle\Factory\FactoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Instride\Bundle\OpenDxpElementManagerBundle\DuplicateIndex\DataTransformer\DataTransformerFactoryInterface;
+use Instride\Bundle\OpenDxpElementManagerBundle\Factory\FactoryInterface;
 use Instride\Bundle\OpenDxpElementManagerBundle\Metadata\DuplicatesIndex\FieldMetadataInterface;
 use Instride\Bundle\OpenDxpElementManagerBundle\Metadata\DuplicatesIndex\GroupMetadataInterface;
 use Instride\Bundle\OpenDxpElementManagerBundle\Metadata\DuplicatesIndex\MetadataInterface;
@@ -40,7 +40,8 @@ readonly class DuplicatesIndexWorker implements DuplicatesIndexWorkerInterface
         private DuplicateObjectRepositoryInterface $duplicateObjectRepository,
         private FactoryInterface                   $duplicateFactory,
         private FactoryInterface                   $duplicateObjectFactory
-    ) {}
+    ) {
+    }
 
     /**
      * @inheritDoc
@@ -150,10 +151,5 @@ readonly class DuplicatesIndexWorker implements DuplicatesIndexWorkerInterface
         }
 
         return $value;
-    }
-
-    protected function isRelevantForIndex(Concrete $concrete): bool
-    {
-        return $concrete->isPublished();
     }
 }

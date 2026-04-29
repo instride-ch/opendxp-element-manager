@@ -55,7 +55,6 @@ class PotentialDuplicateRepository extends EntityRepository implements Potential
             ->setFirstResult($limit * $offset)
             ->setMaxResults($limit)
             ->getQuery()
-            // ->enableResultCache()
             ->useQueryCache(true)
             ->getResult()
         ;
@@ -88,7 +87,6 @@ class PotentialDuplicateRepository extends EntityRepository implements Potential
             ->setParameter('duplicate1', $duplicateObject1)
             ->setParameter('duplicate2', $duplicateObject2)
             ->getQuery()
-            // ->enableResultCache()
             ->useQueryCache(true)
             ->getOneOrNullResult();
     }

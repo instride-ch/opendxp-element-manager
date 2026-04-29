@@ -17,10 +17,10 @@ declare(strict_types=1);
 
 namespace Instride\Bundle\OpenDxpElementManagerBundle\Model;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\PersistentCollection;
 use Instride\Bundle\OpenDxpElementManagerBundle\Resource\AbstractResource;
 use Instride\Bundle\OpenDxpElementManagerBundle\Trait\TimestampableTrait;
-use Doctrine\Common\Collections\ArrayCollection;
 use OpenDxp\Model\DataObject\Concrete;
 
 class Duplicate extends AbstractResource implements DuplicateInterface
@@ -28,16 +28,16 @@ class Duplicate extends AbstractResource implements DuplicateInterface
     use TimestampableTrait;
 
     protected int $id;
-    protected string $className;
-    protected string $group;
-    protected array $data;
-    protected string $md5;
-    protected array $fields;
-    protected int $fieldsCrc;
-    protected Concrete $object;
-    protected ?string $metaphone;
-    protected ?string $soundex;
-    protected array|ArrayCollection|PersistentCollection $objects;
+    public string $className;
+    public string $group;
+    public array $data;
+    public string $md5;
+    public array $fields;
+    public int $fieldsCrc;
+    public Concrete $object;
+    public ?string $metaphone;
+    public ?string $soundex;
+    public array|ArrayCollection|PersistentCollection $objects;
 
     public function __construct()
     {

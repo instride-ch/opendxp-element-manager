@@ -22,7 +22,9 @@ use OpenDxp\Model\DataObject\Concrete;
 
 class NamingSchemeSaveHandler extends AbstractObjectSaveHandler
 {
-    public function __construct(private readonly NamingSchemeInterface $namingScheme) {}
+    public function __construct(private readonly NamingSchemeInterface $namingScheme)
+    {
+    }
 
     /**
      * @throws \Exception

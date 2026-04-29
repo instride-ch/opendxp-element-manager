@@ -17,9 +17,9 @@ declare(strict_types=1);
 
 namespace Instride\Bundle\OpenDxpElementManagerBundle\DuplicateIndex;
 
-use Instride\Bundle\OpenDxpElementManagerBundle\Factory\FactoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Instride\Bundle\OpenDxpElementManagerBundle\DuplicateIndex\Similarity\SimilarityCheckerFactoryInterface;
+use Instride\Bundle\OpenDxpElementManagerBundle\Factory\FactoryInterface;
 use Instride\Bundle\OpenDxpElementManagerBundle\Metadata\DuplicatesIndex\GroupMetadataInterface;
 use Instride\Bundle\OpenDxpElementManagerBundle\Metadata\DuplicatesIndex\MetadataInterface;
 use Instride\Bundle\OpenDxpElementManagerBundle\Model\DuplicateInterface;
@@ -40,7 +40,8 @@ readonly class DuplicateFinder implements DuplicateFinderInterface
         private PotentialDuplicateRepositoryInterface $potentialDuplicateRepository,
         private EntityManagerInterface                $entityManager,
         private FactoryInterface                      $potentialDuplicateFactory
-    ) {}
+    ) {
+    }
 
     /**
      * @inheritDoc
@@ -100,6 +101,10 @@ readonly class DuplicateFinder implements DuplicateFinderInterface
         return \array_merge($soundex, $metaphone);
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     protected function findFuzzyDuplicatesByAlgorithm(MetadataInterface $metadata, string $algorithm): array
     {
         $duplicates = $this->duplicateRepository->findExactByAlgorithm($metadata->getClassName(), $algorithm);

@@ -23,7 +23,9 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 readonly class DuplicateService implements DuplicateServiceInterface
 {
-    public function __construct(private ValidatorInterface $duplicateChecker) {}
+    public function __construct(private ValidatorInterface $duplicateChecker)
+    {
+    }
 
     /**
      * @inheritDoc

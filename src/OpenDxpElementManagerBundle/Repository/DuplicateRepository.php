@@ -17,8 +17,8 @@ declare(strict_types=1);
 
 namespace Instride\Bundle\OpenDxpElementManagerBundle\Repository;
 
-use OpenDxp\Model\DataObject\Concrete;
 use Instride\Bundle\OpenDxpElementManagerBundle\Model\DuplicateInterface;
+use OpenDxp\Model\DataObject\Concrete;
 
 class DuplicateRepository extends EntityRepository implements DuplicateRepositoryInterface
 {
@@ -31,7 +31,6 @@ class DuplicateRepository extends EntityRepository implements DuplicateRepositor
             ->andWhere('o.object = :object')
             ->setParameter('object', $concrete->getId())
             ->getQuery()
-            // ->enableResultCache()
             ->useQueryCache(true)
             ->getResult();
     }
@@ -49,7 +48,6 @@ class DuplicateRepository extends EntityRepository implements DuplicateRepositor
             ->setParameter('crc', $crc)
             ->setParameter('className', $className)
             ->getQuery()
-//            // ->enableResultCache()
             ->useQueryCache(true)
             ->getOneOrNullResult();
     }
@@ -75,7 +73,6 @@ class DuplicateRepository extends EntityRepository implements DuplicateRepositor
             ->having('count(m.id) > 1')
             ->setParameter('className', $className)
             ->getQuery()
-            // ->enableResultCache()
             ->useQueryCache(true)
             ->getResult();
     }
@@ -89,7 +86,6 @@ class DuplicateRepository extends EntityRepository implements DuplicateRepositor
             ->having('count(s.id) > 1')
             ->setParameter('className', $className)
             ->getQuery()
-            // ->enableResultCache()
             ->useQueryCache(true)
             ->getResult();
     }

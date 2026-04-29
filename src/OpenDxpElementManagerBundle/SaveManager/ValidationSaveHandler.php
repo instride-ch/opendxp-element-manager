@@ -23,7 +23,9 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class ValidationSaveHandler extends AbstractObjectSaveHandler
 {
-    public function __construct(private readonly ValidatorInterface $validator) {}
+    public function __construct(private readonly ValidatorInterface $validator)
+    {
+    }
 
     /**
      * @throws ValidationException

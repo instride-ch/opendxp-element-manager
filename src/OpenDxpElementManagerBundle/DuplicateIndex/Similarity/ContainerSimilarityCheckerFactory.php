@@ -24,7 +24,9 @@ class ContainerSimilarityCheckerFactory implements SimilarityCheckerFactoryInter
 {
     private array $dataTransformers = [];
 
-    public function __construct(private readonly ContainerInterface $container) {}
+    public function __construct(private readonly ContainerInterface $container)
+    {
+    }
 
     /**
      * @inheritDoc
