@@ -18,6 +18,7 @@ opendxp.bundle.elementmanager.duplicationIndex.item = Class.create({
 
     initialize: function (data) {
         this.data = data;
+        this.stores = {};
     },
 
     getPanel: function () {
@@ -48,7 +49,7 @@ opendxp.bundle.elementmanager.duplicationIndex.item = Class.create({
             return Ext.isArray(field) ? field.join(',') : field;
         });
 
-        return Ext.create('Ext.data.Store', {
+        const store = Ext.create('Ext.data.Store', {
             fields: listFields.concat(['objectId', 'extId', 'duplicationId', 'declined', 'objectIdOther', '_isFirstColumn']),
             groupField: 'duplicationId',
             autoLoad: true,
@@ -67,6 +68,10 @@ opendxp.bundle.elementmanager.duplicationIndex.item = Class.create({
                 },
             },
         });
+
+        this.stores[declined ? 'declined' : 'current'] = store;
+
+        return store;
     },
 
     createGrid: function (store) {
@@ -104,6 +109,8 @@ opendxp.bundle.elementmanager.duplicationIndex.item = Class.create({
     },
 
     buildDeclineColumn: function () {
+        const item = this;
+
         return {
             xtype: 'gridcolumn',
             dataIndex: '_isFirstColumn',
@@ -129,12 +136,7 @@ opendxp.bundle.elementmanager.duplicationIndex.item = Class.create({
                                     method: 'post',
                                     params: { id: record.get('duplicationId') },
                                     success: function () {
-                                        const grid = view && view.up('grid');
-                                        const gridStore = grid && grid.getStore();
-
-                                        if (gridStore && Ext.isFunction(gridStore.load)) {
-                                            gridStore.load();
-                                        }
+                                        item.refreshStores();
                                     }
                                 });
                             },
@@ -144,6 +146,14 @@ opendxp.bundle.elementmanager.duplicationIndex.item = Class.create({
                 return Ext.String.format('<div id="{0}"></div>', id);
             },
         };
+    },
+
+    refreshStores: function () {
+        Ext.Object.each(this.stores, function (key, store) {
+            if (store && Ext.isFunction(store.load)) {
+                store.load();
+            }
+        });
     },
 
     buildMergeColumn: function () {

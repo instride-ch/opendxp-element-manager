@@ -19,12 +19,12 @@ declare(strict_types=1);
 namespace Instride\Bundle\OpenDxpElementManagerBundle\Command;
 
 use Doctrine\ORM\NonUniqueResultException;
-use OpenDxp\Model\DataObject\AbstractObject;
-use OpenDxp\Model\DataObject\Concrete;
-use OpenDxp\Model\DataObject\Listing;
 use Instride\Bundle\OpenDxpElementManagerBundle\DuplicateIndex\DuplicateFinderInterface;
 use Instride\Bundle\OpenDxpElementManagerBundle\DuplicateIndex\DuplicatesIndexWorkerInterface;
 use Instride\Bundle\OpenDxpElementManagerBundle\Metadata\DuplicatesIndex\MetadataRegistryInterface;
+use OpenDxp\Model\DataObject\AbstractObject;
+use OpenDxp\Model\DataObject\Concrete;
+use OpenDxp\Model\DataObject\Listing;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;

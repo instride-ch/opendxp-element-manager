@@ -27,6 +27,13 @@ class Metadata implements MetadataInterface
     {
     }
 
+    public static function fromAliasAndConfiguration(string $alias, array $parameters): self
+    {
+        [$applicationName, $name] = self::parseAlias($alias);
+
+        return new self($name, $applicationName, $parameters);
+    }
+
     public function getClassName(): string
     {
         return $this->className;
@@ -45,9 +52,19 @@ class Metadata implements MetadataInterface
         return $this->groups;
     }
 
+    public function setGroups(array $groups): void
+    {
+        $this->groups = $groups;
+    }
+
     public function getListFields(): array
     {
         return $this->listFields;
+    }
+
+    public function setListFields(array $listFields): void
+    {
+        $this->listFields = $listFields;
     }
 
     public function getGroup(string $name): ?GroupMetadataInterface
@@ -58,5 +75,14 @@ class Metadata implements MetadataInterface
         );
 
         return \reset($filteredGroups);
+    }
+
+    private static function parseAlias($alias): array
+    {
+        if (!str_contains($alias, '.')) {
+            throw new \InvalidArgumentException('Invalid alias supplied, it should conform to the following format "<applicationName>.<name>".');
+        }
+
+        return explode('.', $alias);
     }
 }

@@ -45,7 +45,7 @@ class PotentialDuplicateRepository extends EntityRepository implements Potential
 
     public function findForClassName(string $className, bool $declined, int $offset, int $limit): array
     {
-        return $this->createQueryBuilder('o')
+        $query = $this->createQueryBuilder('o')
             ->where('d.className = :className')
             ->andWhere('o.declined = :declined')
             ->innerJoin('o.duplicateFrom', 'f')
@@ -54,10 +54,10 @@ class PotentialDuplicateRepository extends EntityRepository implements Potential
             ->setParameter('declined', $declined)
             ->setFirstResult($limit * $offset)
             ->setMaxResults($limit)
-            ->getQuery()
-            ->useQueryCache(true)
-            ->getResult()
-        ;
+//            ->useQueryCache(true)
+            ->getQuery();
+
+        return $query->getResult();
     }
 
     public function findCountForClassName(string $className, bool $declined): int

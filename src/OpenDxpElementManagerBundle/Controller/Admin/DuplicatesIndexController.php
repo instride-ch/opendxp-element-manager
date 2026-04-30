@@ -31,7 +31,6 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
-
 class DuplicatesIndexController extends AdminAbstractController
 {
     public function __construct(

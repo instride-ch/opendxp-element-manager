@@ -24,4 +24,16 @@ interface PostObjectSaveHandlerInterface
     public function postPreSave(Concrete $object, array $options): void;
 
     public function postPostSave(Concrete $object, array $options): void;
+
+    public function postPreAdd(Concrete $object, array $options): void;
+
+    public function postPostAdd(Concrete $object, array $options): void;
+
+    public function postPreUpdate(Concrete $object, array $options): void;
+
+    public function postPostUpdate(Concrete $object, array $options): void;
+
+    public function postPreDelete(Concrete $object, array $options): void;
+
+    public function postPostDelete(Concrete $object, array $options): void;
 }
