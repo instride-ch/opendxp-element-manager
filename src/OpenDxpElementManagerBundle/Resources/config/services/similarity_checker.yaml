@@ -1,4 +1,0 @@
-services:
-    Instride\Bundle\OpenDxpElementManagerBundle\DuplicateIndex\Similarity\SimilarText:
-        tags:
-            - { name: opendxp_element_manager.similarity_checker, type: similar_text }

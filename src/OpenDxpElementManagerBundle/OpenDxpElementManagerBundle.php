@@ -18,10 +18,7 @@ declare(strict_types=1);
 namespace Instride\Bundle\OpenDxpElementManagerBundle;
 
 use Composer\InstalledVersions;
-use Doctrine\Bundle\DoctrineBundle\DependencyInjection\Compiler\DoctrineOrmMappingsPass;
-use Instride\Bundle\OpenDxpElementManagerBundle\DependencyInjection\CompilerPass\AddDataTransformersPass;
 use Instride\Bundle\OpenDxpElementManagerBundle\DependencyInjection\CompilerPass\AddSaveHandlerPass;
-use Instride\Bundle\OpenDxpElementManagerBundle\DependencyInjection\CompilerPass\AddSimilarityCheckerPass;
 use Instride\Bundle\OpenDxpElementManagerBundle\DependencyInjection\OpenDxpElementManagerExtension;
 use OpenDxp\Extension\Bundle\AbstractOpenDxpBundle;
 use OpenDxp\Extension\Bundle\OpenDxpBundleAdminClassicInterface;
@@ -43,19 +40,10 @@ class OpenDxpElementManagerBundle extends AbstractOpenDxpBundle implements OpenD
     {
         parent::build($container);
 
-        $container->addCompilerPass(DoctrineOrmMappingsPass::createXmlMappingDriver(
-            [
-                \realpath(__DIR__ . '/Resources/config/doctrine/model') => 'Instride\\Bundle\\OpenDxpElementManagerBundle\\Model',
-            ],
-            ['doctrine.default_entity_manager'],
-        ));
-
         $container->addCompilerPass(new AddConstraintValidatorsPass(
             'duplication_checker.validator_factory',
             'duplication_checker.constraint_validator'
         ));
-        $container->addCompilerPass(new AddDataTransformersPass());
-        $container->addCompilerPass(new AddSimilarityCheckerPass());
         $container->addCompilerPass(new AddSaveHandlerPass());
     }
 
@@ -92,22 +80,6 @@ class OpenDxpElementManagerBundle extends AbstractOpenDxpBundle implements OpenD
         }
 
         return '';
-    }
-
-    public function getJsPaths(): array
-    {
-        return [
-            '/bundles/opendxpelementmanager/opendxp/js/duplication_index/item.js',
-            '/bundles/opendxpelementmanager/opendxp/js/duplication_index/panel.js',
-            '/bundles/opendxpelementmanager/opendxp/js/startup.js',
-        ];
-    }
-
-    public function getCssPaths(): array
-    {
-        return [
-            '/bundles/opendxpelementmanager/opendxp/css/opendxpelementmanager.css',
-        ];
     }
 
     public function getContainerExtension(): ?ExtensionInterface

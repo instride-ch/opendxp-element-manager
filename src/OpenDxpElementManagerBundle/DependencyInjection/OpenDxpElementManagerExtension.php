@@ -17,12 +17,6 @@ declare(strict_types=1);
 
 namespace Instride\Bundle\OpenDxpElementManagerBundle\DependencyInjection;
 
-use Instride\Bundle\OpenDxpElementManagerBundle\Doctrine\Type\OpenDxpObjectType;
-use Instride\Bundle\OpenDxpElementManagerBundle\Factory\Factory as DefaultFactory;
-use Instride\Bundle\OpenDxpElementManagerBundle\Metadata\DuplicatesIndex\FieldMetadata;
-use Instride\Bundle\OpenDxpElementManagerBundle\Metadata\DuplicatesIndex\GroupMetadata;
-use Instride\Bundle\OpenDxpElementManagerBundle\Metadata\DuplicatesIndex\Metadata;
-use Instride\Bundle\OpenDxpElementManagerBundle\Metadata\DuplicatesIndex\MetadataRegistry;
 use Instride\Bundle\OpenDxpElementManagerBundle\SaveManager\DuplicationSaveHandler;
 use Instride\Bundle\OpenDxpElementManagerBundle\SaveManager\NamingSchemeSaveHandler;
 use Instride\Bundle\OpenDxpElementManagerBundle\SaveManager\ObjectSaveManagers;
@@ -48,13 +42,6 @@ class OpenDxpElementManagerExtension extends Extension implements PrependExtensi
 
     public function prepend(ContainerBuilder $container): void
     {
-        $container->prependExtensionConfig('doctrine', [
-            'dbal' => [
-                'types' => [
-                    OpenDxpObjectType::NAME => OpenDxpObjectType::class,
-                ],
-            ],
-        ]);
     }
 
     /**
@@ -68,26 +55,8 @@ class OpenDxpElementManagerExtension extends Extension implements PrependExtensi
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader->load('services.yaml');
-        $loader->load('services/data_transformer.yaml');
         $loader->load('services/duplication.yaml');
-        $loader->load('services/similarity_checker.yaml');
-        $loader->load('services/commands.yaml');
         $loader->load('services/save_manager.yaml');
-
-        $this->registerResources(
-            $config['resources'],
-            $container
-        );
-        $this->registerOpenDxpResources(
-            $config['opendxp_admin'],
-            $container
-        );
-
-        $bundles = $container->getParameter('kernel.bundles');
-        $isMergeSupported = \array_key_exists('ObjectMergerBundle', $bundles);
-
-        $container->setParameter('opendxp_element_manager.merge_supported', $isMergeSupported);
 
         $this->registerDuplicationCheckerConfiguration($config['duplication'] ?? [], $container, $loader);
 
@@ -99,13 +68,7 @@ class OpenDxpElementManagerExtension extends Extension implements PrependExtensi
                 $container,
                 $className,
                 $classConfig ?? [],
-                $loader,
                 $objectSaveManagers
-            );
-            $this->registerDuplicateIndexConfiguration(
-                $container,
-                $className,
-                $classConfig['duplicates_index'] ?? []
             );
         }
     }
@@ -117,11 +80,8 @@ class OpenDxpElementManagerExtension extends Extension implements PrependExtensi
         ContainerBuilder $container,
         string $className,
         array $config,
-        Loader\YamlFileLoader $loader,
         Definition $objectSaveManagers
     ): void {
-        $loader->load('services/save_manager.yaml');
-
         $definition = new Definition($config['save_manager_class']);
         $options = [
             'naming_scheme' => $config['naming_scheme']['options'] ?? null,
@@ -194,10 +154,6 @@ class OpenDxpElementManagerExtension extends Extension implements PrependExtensi
             $duplicationBuilder->addMethodCall('addYamlMappings', [$files['yaml']]);
         }
 
-        if (!empty($files['xml'])) {
-            $duplicationBuilder->addMethodCall('addXmlMappings', [$files['yaml']]);
-        }
-
         if (!$container->getParameter('kernel.debug')) {
             $duplicationBuilder->addMethodCall('setMappingCache', [
                 new Reference('duplication_checker.mapping.cache.adapter'),
@@ -223,10 +179,6 @@ class OpenDxpElementManagerExtension extends Extension implements PrependExtensi
                 $fileRecorder('yaml', $file);
             }
 
-            if ($container->fileExists($file = $dirname . '/Resources/config/duplication.xml', false)) {
-                $fileRecorder('xml', $file);
-            }
-
             if ($container->fileExists($dir = $dirname . '/Resources/config/duplication', '/^$/')) {
                 $this->registerMappingFilesFromDir($dir, $fileRecorder);
             }
@@ -247,7 +199,7 @@ class OpenDxpElementManagerExtension extends Extension implements PrependExtensi
             ->followLinks()
             ->files()
             ->in($dir)
-            ->name('/\.(xml|ya?ml)$/')
+            ->name('/\.(ya?ml)$/')
             ->sortByName();
 
         /** @var File $file */
@@ -266,7 +218,7 @@ class OpenDxpElementManagerExtension extends Extension implements PrependExtensi
                 $this->registerMappingFilesFromDir($path, $fileRecorder);
                 $container->addResource(new DirectoryResource($path, '/^$/'));
             } elseif ($container->fileExists($path, false)) {
-                if (!\preg_match('/\.(xml|ya?ml)$/', $path, $matches)) {
+                if (!\preg_match('/\.(ya?ml)$/', $path, $matches)) {
                     throw new \RuntimeException(
                         \sprintf('Unsupported mapping type in "%s", supported types is only Yaml.', $path)
                     );
@@ -277,143 +229,5 @@ class OpenDxpElementManagerExtension extends Extension implements PrependExtensi
                 throw new \RuntimeException(\sprintf('Could not open file or directory "%s".', $path));
             }
         }
-    }
-
-    private function registerDuplicateIndexConfiguration(
-        ContainerBuilder $container,
-        string $className,
-        array $config
-    ): void {
-        if (!isset($config['enabled']) || $config['enabled'] !== true) {
-            return;
-        }
-
-        $groups = [];
-
-        foreach ($config['groups'] ?? [] as $groupName => $group) {
-            $fields = [];
-
-            foreach ($group['fields'] ?? [] as $fieldName => $fieldConfig) {
-                $fieldMetaData = new Definition(FieldMetadata::class, [
-                    $fieldName, $fieldConfig,
-                ]);
-                $fieldMetaData->setPublic(false);
-
-
-
-                $fieldId = \sprintf(
-                    'opendxp_element_manager.metadata.%s.%s.%s',
-                    \strtolower($className),
-                    \strtolower($groupName),
-                    \strtolower($fieldName)
-                );
-
-                $container->setDefinition($fieldId, $fieldMetaData);
-
-                $fields[] = new Reference($fieldId);
-            }
-
-            $groupMetaData = new Definition(GroupMetadata::class, [$groupName, $fields]);
-            $groupMetaData->setPublic(false);
-
-            $groupId = \sprintf(
-                'opendxp_element_manager.metadata.%s.%s',
-                \strtolower($className),
-                \strtolower($groupName)
-            );
-
-            $container->setDefinition($groupId, $groupMetaData);
-            $groups[] = new Reference($groupId);
-        }
-
-        if (\count($groups) === 0) {
-            return;
-        }
-
-        $listFields = $config['list_fields'] ?? [];
-
-        $metadata = new Definition(Metadata::class, [$className, $groups, $listFields]);
-
-        $container->setDefinition(
-            \sprintf('opendxp_element_manager.metadata.%s', \strtolower($className)),
-            $metadata
-        );
-
-        $container->getDefinition(MetadataRegistry::class)->addMethodCall('register', [
-            new Reference(\sprintf('opendxp_element_manager.metadata.%s', \strtolower($className))),
-        ]);
-    }
-
-    /**
-     * Registers factory and repository services for each resource declared in config.
-     *
-     * Factory: `<app>.<resource>.factory`, autowired by constructor(modelClass).
-     * Repository: `<app>.<resource>.repository`, built via EntityManager::getRepository(modelClass)
-     * so Doctrine's `repository-class` ORM mapping returns the custom repository instance.
-     *
-     * Aliases the declared interfaces to the registered service IDs so type-hinted
-     * constructors and service configs can resolve them.
-     */
-    private function registerResources(array $resources, ContainerBuilder $container): void
-    {
-        $applicationName = 'opendxp_element_manager';
-
-        foreach ($resources as $resourceName => $resourceConfig) {
-            $this->registerFactoryService($container, $applicationName, $resourceName, $resourceConfig['classes']);
-            $this->registerRepositoryService($container, $applicationName, $resourceName, $resourceConfig['classes']);
-        }
-    }
-
-    private function registerFactoryService(ContainerBuilder $container, string $applicationName, string $resourceName, array $classes): void
-    {
-        $factoryClass = $classes['factory'] ?? DefaultFactory::class;
-        $definition = new Definition($factoryClass, [$classes['model']]);
-        $definition->setPublic(true);
-        $container->setDefinition($applicationName . '.factory.' . $resourceName, $definition);
-    }
-
-    private function registerRepositoryService(ContainerBuilder $container, string $applicationName, string $resourceName, array $classes): void
-    {
-        if (!isset($classes['repository'])) {
-            return;
-        }
-
-        $serviceId = $applicationName . '.repository.' . $resourceName;
-
-        $definition = new Definition($classes['repository']);
-        $definition->setFactory([new Reference('doctrine.orm.entity_manager'), 'getRepository']);
-        $definition->setArguments([$classes['model']]);
-        $definition->setPublic(true);
-        $container->setDefinition($serviceId, $definition);
-
-        $interface = $this->guessRepositoryInterface($classes['repository']);
-        if ($interface !== null) {
-            $container->setAlias($interface, $serviceId)->setPublic(true);
-        }
-    }
-
-    private function guessRepositoryInterface(string $repositoryClass): ?string
-    {
-        if (!\class_exists($repositoryClass)) {
-            return null;
-        }
-        $interfaces = \class_implements($repositoryClass) ?: [];
-        foreach ($interfaces as $iface) {
-            if (\str_ends_with($iface, 'RepositoryInterface') && !\str_contains($iface, 'Resource\\Repository')) {
-                return $iface;
-            }
-        }
-        return null;
-    }
-
-    private function registerOpenDxpResources(array $config, ContainerBuilder $container): void
-    {
-        $applicationName = 'opendxp_element_manager';
-
-        $container->setParameter($applicationName . '.opendxp_admin.js', $config['js'] ?? []);
-        $container->setParameter($applicationName . '.opendxp_admin.css', $config['css'] ?? []);
-        $container->setParameter($applicationName . '.opendxp_admin.editmode_js', $config['editmode_js'] ?? []);
-        $container->setParameter($applicationName . '.opendxp_admin.editmode_css', $config['editmode_css'] ?? []);
-        $container->setParameter($applicationName . '.permissions', $config['permissions'] ?? []);
     }
 }

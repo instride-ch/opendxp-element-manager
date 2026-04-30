@@ -22,8 +22,6 @@ use OpenDxp\Model\DataObject\Service;
 
 class UniqueKeySaveHandler extends AbstractObjectSaveHandler
 {
-    use PostObjectSaveHandlerTrait;
-
     /**
      * @param Concrete $object
      * @param array $options
