@@ -17,3 +17,7 @@
         Instride\Bundle\OpenDxpElementManagerBundle\OpenDxpElementManagerBundle::class => ['all' => true],
     ];
   ```
+
+### Documentation
+
+- [Documentation index](docs/index.md)
