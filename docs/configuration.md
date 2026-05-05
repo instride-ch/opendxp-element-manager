@@ -41,22 +41,6 @@ The bundle also auto-discovers mapping files from bundles:
 - `config/duplication.yaml`
 - `config/duplication/*.yaml`
 
-### classes
-
-Each entry key is a data object class name (for example `Product`).
-
-- `save_manager_class` (default: `Instride\Bundle\OpenDxpElementManagerBundle\SaveManager\ObjectSaveManager`)
-- `naming_scheme.enabled` (default: `false`)
-- `naming_scheme.service` (default:
-  `Instride\Bundle\OpenDxpElementManagerBundle\SaveManager\NamingScheme\ExpressionNamingScheme`)
-- `naming_scheme.options`: options passed to the naming scheme implementation.
-- `unique_key.enabled` (default: `false`)
-- `duplicates.enabled_on_save` (default: `false`)
-- `duplicates.options`: options passed to the duplicate handler.
-- `validations.enabled_on_save` (default: `true`)
-- `validations.options.group` (default: `opendxp_element_manager`)
-- `save_handlers`: list of additional save handler service IDs.
-
 ## Notes on options
 
 Options are passed to save handlers as an array with the keys `naming_scheme`, `duplicates`, and `validations`. For

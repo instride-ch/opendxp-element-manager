@@ -22,10 +22,6 @@ return [
 ];
 ```
 
-## Optional dependencies
-
-- `opendxp/object-merger`: useful if you plan to merge duplicates directly.
-
 ## Next step
 
 Continue with the configuration guide to enable features per class.

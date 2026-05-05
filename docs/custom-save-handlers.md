@@ -1,6 +1,7 @@
 # Custom Save Handlers
 
-You can extend the save pipeline by implementing `ObjectSaveHandlerInterface` or `PostObjectSaveHandlerInterface` and registering your handler as a service.
+You can extend the save pipeline by implementing `ObjectSaveHandlerInterface` and
+registering your handler as a service.
 
 ## Basic handler
 
@@ -35,8 +36,3 @@ opendxp_element_manager:
             save_handlers:
                 - App\SaveHandler\MyHandler
 ```
-
-## Post handlers
-
-If you need the post phase callbacks, implement `PostObjectSaveHandlerInterface` in addition to the base handler.
-
