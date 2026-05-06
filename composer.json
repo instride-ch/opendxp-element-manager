@@ -15,21 +15,13 @@
       "email": "connect@instride.ch",
       "homepage": "https://instride.ch",
       "role": "Digital Agency"
-    },
-    {
-      "name": "CORS GmbH",
-      "email": "office@cors.gmbh",
-      "homepage": "https://cors.gmbh",
-      "role": "Digital Agency"
     }
   ],
   "require": {
-    "open-dxp/opendxp": "^1.3",
-    "webmozart/assert": "^2.3",
-    "symfony/security-bundle": "^7.4"
+    "open-dxp/opendxp": "^1.3"
   },
   "suggest": {
-    "opendxp/object-merger": "To directly merge duplicates"
+    "opendxp/object-merger-bundle": "To directly merge duplicates"
   },
   "autoload": {
     "psr-4": {
