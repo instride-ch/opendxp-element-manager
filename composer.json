@@ -1,14 +1,13 @@
 {
   "name": "instride/opendxp-element-manager",
   "type": "opendxp-bundle",
-  "license": "GPL-3.0-or-later",
-  "description": "Element Manager",
+  "description": "OpenDXP Element Manager",
   "keywords": [
     "opendxp",
     "opendxp-bundle"
   ],
   "homepage": "https://github.com/instride-ch/opendxp-element-manager",
-  "minimum-stability": "dev",
+  "license": "GPL-3.0-or-later",
   "authors": [
     {
       "name": "instride AG",
@@ -25,7 +24,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Instride\\Bundle\\OpenDxpElementManagerBundle\\": "src/OpenDxpElementManagerBundle/"
+      "Instride\\Bundle\\OpenDxpElementManagerBundle\\": "src/"
     }
   },
   "extra": {

@@ -1,24 +1,26 @@
-![Pimcore Element Manager](docs/images/github_banner.png)
+![OpenDXP Element Manager](docs/images/github_banner.png)
 
 ### Requirements
 
-* OpenDxp `^1.3`
+- [OpenDXP](https://github.com/open-dxp/opendxp) `^1.3`
 
 ### Installation
 
 - Install with composer
   ```
-  composer require instride/opendxp-element-manager:^3.0
+  composer require instride/opendxp-element-manager:^1.0
   ```
 
 - Add to `config/bundles.php`
   ```php
-    return [
-        // ...
-        Instride\Bundle\OpenDxpElementManagerBundle\OpenDxpElementManagerBundle::class => ['all' => true],
-    ];
+  return [
+      // ...
+      Instride\Bundle\OpenDxpElementManagerBundle\OpenDxpElementManagerBundle::class => ['all' => true],
+  ];
   ```
 
 ### Documentation
 
-- [Documentation index](docs/index.md)
+- [Getting started](docs/index.md)
+- [Installation](docs/installation.md)
+- [Configuration](docs/configuration.md)
