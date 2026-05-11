@@ -73,10 +73,10 @@ class OpenDxpElementManagerBundle extends AbstractOpenDxpBundle implements OpenD
 
     public function getVersion(): string
     {
-        $bundleName = 'instride/opendxp-element-manager';
+        $packageName = $this->getComposerPackageName();
 
-        if (\class_exists(InstalledVersions::class) && InstalledVersions::isInstalled($bundleName)) {
-            return InstalledVersions::getVersion($bundleName);
+        if (\class_exists(InstalledVersions::class) && InstalledVersions::isInstalled($packageName)) {
+            return InstalledVersions::getVersion($packageName);
         }
 
         return '';
