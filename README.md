@@ -1,5 +1,8 @@
 ![OpenDXP Element Manager](docs/images/github_banner.png)
 
+[![Software License](https://img.shields.io/badge/license-GPLv3-brightgreen.svg?style=flat-square)](LICENSE.md)
+[![Latest Stable Version](https://img.shields.io/packagist/v/instride/opendxp-element-manager.svg?style=flat-square)](https://packagist.org/packages/instride/opendxp-element-manager)
+
 ### Requirements
 
 - [OpenDXP](https://github.com/open-dxp/opendxp) `^1.3`
